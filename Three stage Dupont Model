@@ -1,0 +1,58 @@
+import pandas as pd
+
+years = [2024, 2023, 2022, 2021, 2020]
+sales = []
+net_income = []
+total_assets = []
+shareholders_equity = []
+
+def profit_margin():
+    margins_per_year = []
+    for year in range(len(years)):
+        profit_margin = net_income[year] / sales[year]
+        margins_per_year.append(profit_margin)
+    return margins_per_year
+
+def asset_turnover():
+    asset_turnover_per_year = []
+    for year in range(len(years)):
+        turnover = sales[year] / total_assets[year]
+        asset_turnover_per_year.append(turnover)
+    return asset_turnover_per_year
+
+def equity_multiplier():
+    equity_multiplier_per_year = []
+    for year in range(len(years)):
+        multiplier = total_assets[year] / shareholders_equity[year]
+        equity_multiplier_per_year.append(multiplier)
+    return equity_multiplier_per_year
+
+def three_step_dupont(profit_margin, asset_turnover, equity_multiplier):
+    ROE = []
+    for year in range(len(years)):
+        multiplication = profit_margin[year] * asset_turnover[year] * equity_multiplier[year]
+        ROE.append(multiplication)
+    return ROE
+
+roe = three_step_dupont(profit_margin(), asset_turnover(), equity_multiplier())
+
+# Create a DataFrame using the three-step DuPont model results
+data = {
+    'Year': years,
+    'Profit Margin': profit_margin(),
+    'Asset Turnover': asset_turnover(),
+    'Equity Multiplier': equity_multiplier(),
+    'ROE': roe
+}
+df = pd.DataFrame(data)
+df = df.round(2)  # Round all values to two decimal places
+print(df)
+
+# Plotting
+plt.figure(figsize=(10, 6))
+plt.bar(df['Year'], df['ROE'])
+plt.xlabel('Year')
+plt.ylabel('ROE')
+plt.title('ROE by Year')
+plt.xticks(years)
+plt.show()
